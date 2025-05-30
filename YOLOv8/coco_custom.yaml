@@ -1,0 +1,16 @@
+# YOLOv8/coco_custom.yaml
+
+# 直接把 yolo_labels 当作 path
+path: ../datasets/yolo_labels_target_augmented
+#path: ../datasets/yolo_labels_no_lcf
+# 下面直接指 images 文件夹
+train: images/train
+val:   images/val
+
+nc: 5
+names:
+  0: normal
+  1: SCF_type1
+  2: SCF_type2
+  3: SCF_type3
+  4: LCF

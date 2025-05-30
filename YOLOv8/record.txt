@@ -1,0 +1,22 @@
+##bone_fracture_yolo_v24 --- datasets/yolo_labels_target_augmented
+    只對SCF_type1, SCF_type2, LCF做資料增強，有:
+        A.HorizontalFlip(p=0.5),
+        A.CLAHE(clip_limit=(2, 4), tile_grid_size=(8, 8), p=0.7),
+        A.Rotate(limit=25, border_mode=cv2.BORDER_REFLECT_101, p=0.7),
+        A.Sharpen(alpha=(0.2, 0.5), lightness=(0.5, 1.0), p=0.4)
+
+##bone_fracture_yolo_v25 --- datasets/yolo_labels_all_clahe
+    全部都做clahe，SCF_type1, SCF_type2, LCF再做加強，同上
+
+##bone_fracture_yolo_v26 --- datasets/yolo_labels
+    原資料
+
+##bone_fracture_yolo_v27 --- datasets/yolo_labels_all_clahe
+    同25，但train.py無加入
+        mosaic=True,
+        auto_augment=True,
+
+##bone_fracture_yolo_v28 --- datasets/yolo_labels_target_augmented
+    同24，但train.py無加入
+        mosaic=True,
+        auto_augment=True,
