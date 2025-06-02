@@ -1,0 +1,7 @@
+flask
+torch               # PyTorch
+torchvision         # 含 Faster R-CNN
+ultralytics         # YOLOv8 Python API
+Pillow              # 處理影像
+opencv-python       # 畫框時可用 cv2
+numpy
