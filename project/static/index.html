@@ -1,0 +1,116 @@
+<!-- static/index.html -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>物件檢測 Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    select,
+    input[type="file"],
+    button {
+      width: 100%;
+      padding: 8px;
+      font-size: 1em;
+    }
+    #preview,
+    #result {
+      display: block;
+      margin: 20px auto;
+      max-width: 100%;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007acc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:disabled {
+      background-color: #999;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h1>物件檢測模型切換</h1>
+  <div class="form-group">
+    <label for="modelSelect">選擇模型：</label>
+    <select id="modelSelect">
+      <option value="faster">Faster R-CNN</option>
+      <option value="yolo">YOLO</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="imageInput">上傳圖片：</label>
+    <input type="file" id="imageInput" accept="image/*" />
+  </div>
+  <button id="runBtn" disabled>開始推論</button>
+
+  <img id="preview" alt="預覽圖像" />
+  <img id="result" alt="結果圖像" />
+
+  <script>
+    const imageInput = document.getElementById('imageInput');
+    const modelSelect = document.getElementById('modelSelect');
+    const runBtn = document.getElementById('runBtn');
+    const preview = document.getElementById('preview');
+    const resultImg = document.getElementById('result');
+
+    let selectedFile = null;
+
+    imageInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      selectedFile = file;
+      const url = URL.createObjectURL(file);
+      preview.src = url;
+      resultImg.src = '';
+      runBtn.disabled = false;
+    });
+
+    runBtn.addEventListener('click', async () => {
+      if (!selectedFile) return;
+      runBtn.disabled = true;
+      runBtn.textContent = '推論中...';
+
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('model', modelSelect.value);
+
+      try {
+        // 這裡直接呼叫 /predict，不需要改成其他路徑
+        const resp = await fetch('/predict', {
+          method: 'POST',
+          body: formData
+        });
+        if (!resp.ok) throw new Error('伺服器錯誤');
+        const blob = await resp.blob();
+        resultImg.src = URL.createObjectURL(blob);
+      } catch (err) {
+        alert('推論失敗：' + err.message);
+      } finally {
+        runBtn.disabled = false;
+        runBtn.textContent = '開始推論';
+      }
+    });
+  </script>
+</body>
+</html>
